@@ -26,7 +26,6 @@ export default class finishOrderPage extends Waiting{
 
         await this.page.waitForSelector(this.pay, { state: 'hidden' });
 
-        await this.waiting(this.buttonMakeAnAppointment);
         await this.page.locator(this.buttonMakeAnAppointment).click();
     }
 }

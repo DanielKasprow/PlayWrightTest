@@ -7,10 +7,11 @@ export default class ReceptionPage extends Waiting{
     buttonOrder = '//button[@id="consultationNestedMenu:prescriptionHeader"]';
     drugSearchNoValue = 'div[class="select-v2 css-2b097c-container"] >div';
     drugSearchOpen = '#react-select-2-input';
+    drugSearchResult = 'div[class="menu__wrapper"] >div>div>div:nth-of-type(2)';
 
-    selectPackageSize = 'div[class="fk-select fk-select--no-small-placeholder fk-select--font-lighter"]';
-    select2 ='div[class="fk-select fk-select--no-small-placeholder fk-select--font-lighter"] >div >div >:nth-of-type(2)>div>div>:nth-of-type(2)';
-    checkbox = 'label[class="fk-checkbox__label"]';
+    selectPackageSizeClose = 'div[class="fk-select fk-select--no-small-placeholder fk-select--font-lighter"]';
+    selectPackageSizeMenu = 'div[class=" css-11unzgr"]>div';
+    checkboxTerm = 'label[class="fk-checkbox__label"]';
     buttonSelect = 'button[class="fk-button"]';
     
 
@@ -30,7 +31,7 @@ export default class ReceptionPage extends Waiting{
         await this.page.locator(this.buttonOrder).click();
     }
 
-    async enterdrug(drugName: string){
+    async enterDrug(drugName: string){
 
         await this.waiting(this.drugSearchNoValue);
         await this.page.locator(this.drugSearchNoValue).click();
@@ -38,24 +39,18 @@ export default class ReceptionPage extends Waiting{
         await this.waiting(this.drugSearchOpen);
         await this.page.locator(this.drugSearchOpen).fill(drugName);
 
-        await this.page.waitForTimeout(2000);
-        await this.waiting(this.drugSearchOpen);
-        await this.page.locator(this.drugSearchOpen).press('Enter');
-        await this.page.waitForTimeout(1000);
+        await this.page.locator(this.drugSearchResult).filter({hasText: drugName}).click();
 
     }
 
-    async selectDrugVariant(){
-        await this.waiting(this.selectPackageSize);
-        await this.page.locator(this.selectPackageSize).click();
+    async selectDrugVariant(variantDrug: string){
+        await this.waiting(this.selectPackageSizeClose);
+        await this.page.locator(this.selectPackageSizeClose).click();
+
+        await this.page.locator(this.selectPackageSizeMenu).filter({hasText: variantDrug}).click();
         
-        await this.waiting(this.select2);
-        await this.page.locator(this.select2).click();
+        await this.page.locator(this.checkboxTerm).check();
 
-        await this.waiting(this.checkbox);
-        await this.page.locator(this.checkbox).check();
-
-        await this.waiting(this.buttonSelect);
         await this.page.locator(this.buttonSelect).click();
 
     }
